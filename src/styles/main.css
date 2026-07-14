@@ -1,0 +1,309 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+@import 'primeicons/primeicons.css';
+@import 'tailwindcss';
+
+:root {
+  color-scheme: dark;
+  --bg: #101214;
+  --bg-soft: #171a1f;
+  --card: #1c2026;
+  --card-muted: #222833;
+  --border: rgba(255, 255, 255, 0.08);
+  --text: #f5f3ef;
+  --muted: #a8b0be;
+  --gold: #d5ac57;
+  --gold-soft: #f1deb0;
+  --success: #34d399;
+  --danger: #f87171;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  font-family: 'Cairo', sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(213, 172, 87, 0.07), transparent 20%),
+    linear-gradient(180deg, #121418, #101214 28%, #0d0f12 100%);
+  color: var(--text);
+}
+
+#app {
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+::selection {
+  background: rgba(213, 172, 87, 0.35);
+}
+
+.panel {
+  border: 1px solid var(--border);
+  background: rgba(28, 32, 38, 0.92);
+  border-radius: 24px;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.panel-muted {
+  border: 1px solid var(--border);
+  background: rgba(34, 40, 51, 0.75);
+  border-radius: 22px;
+}
+
+.gold-button {
+  background: var(--gold);
+  color: #151515;
+}
+
+.gold-button:hover {
+  background: #e3ba63;
+}
+
+.gold-button:focus-visible,
+.ghost-button:focus-visible,
+.p-focus {
+  outline: 2px solid rgba(213, 172, 87, 0.7);
+  outline-offset: 2px;
+}
+
+.ghost-button {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+}
+
+.eyebrow {
+  color: var(--gold-soft);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metric-label {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.metric-value {
+  color: var(--text);
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.muted-text {
+  color: var(--muted);
+}
+
+.section-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.print-surface {
+  background: white;
+  color: #111827;
+}
+
+.p-datatable {
+  background: transparent !important;
+}
+
+.p-datatable-table th,
+.p-datatable-table td {
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.p-inputtext,
+.p-dropdown,
+.p-datepicker,
+.p-calendar,
+.p-inputnumber,
+.p-password-input,
+.p-textarea,
+.p-select,
+.p-multiselect {
+  width: 100%;
+}
+
+.p-inputtext,
+.p-dropdown,
+.p-calendar,
+.p-password-input,
+.p-datepicker-input,
+.p-inputnumber-input,
+.p-textarea {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: var(--text) !important;
+  border-radius: 18px !important;
+}
+
+.p-dropdown,
+.p-select,
+.p-multiselect {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text) !important;
+}
+
+.p-dropdown:hover,
+.p-select:hover,
+.p-multiselect:hover {
+  border-color: rgba(213, 172, 87, 0.45) !important;
+}
+
+.p-dropdown.p-focus,
+.p-select.p-focus,
+.p-multiselect.p-focus {
+  border-color: rgba(213, 172, 87, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(213, 172, 87, 0.12) !important;
+}
+
+.p-dropdown-label,
+.p-select-label,
+.p-multiselect-label,
+.p-dropdown .p-placeholder,
+.p-select .p-placeholder,
+.p-multiselect .p-placeholder {
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+.p-dropdown-label.p-placeholder,
+.p-select-label.p-placeholder,
+.p-multiselect-label.p-placeholder {
+  color: #94a3b8 !important;
+}
+
+.p-dropdown-trigger,
+.p-select-dropdown,
+.p-multiselect-dropdown {
+  color: #9fb0c8 !important;
+}
+
+.p-dropdown-panel,
+.p-select-overlay,
+.p-multiselect-overlay {
+  background: #171b22 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32) !important;
+}
+
+.p-dropdown-items,
+.p-select-list,
+.p-multiselect-list {
+  padding: 0.4rem !important;
+}
+
+.p-dropdown-item,
+.p-select-option,
+.p-multiselect-option {
+  color: var(--text) !important;
+  border-radius: 12px !important;
+  margin: 0.15rem 0 !important;
+  background: transparent !important;
+}
+
+.p-dropdown-item:hover,
+.p-select-option:hover,
+.p-multiselect-option:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #fff8e7 !important;
+}
+
+.p-dropdown-item.p-focus,
+.p-select-option.p-focus,
+.p-multiselect-option.p-focus,
+.p-select-option[data-p-focused='true'],
+.p-dropdown-item[data-p-focused='true'],
+.p-multiselect-option[data-p-focused='true'] {
+  background: rgba(213, 172, 87, 0.12) !important;
+  color: #fff4d6 !important;
+}
+
+.p-dropdown-item.p-highlight,
+.p-select-option.p-selected,
+.p-multiselect-option.p-selected,
+.p-select-option.p-select-option-selected,
+.p-select-option[data-p-selected='true'],
+.p-dropdown-item[data-p-selected='true'],
+.p-multiselect-option[data-p-selected='true'] {
+  background: rgba(213, 172, 87, 0.18) !important;
+  color: var(--gold-soft) !important;
+}
+
+.p-select-option.p-select-option-selected.p-focus,
+.p-select-option.p-select-option-selected[data-p-focused='true'],
+.p-select-option[data-p-selected='true'][data-p-focused='true'],
+.p-dropdown-item.p-highlight.p-focus,
+.p-dropdown-item[data-p-selected='true'][data-p-focused='true'] {
+  background: rgba(213, 172, 87, 0.24) !important;
+  color: #fff4d6 !important;
+}
+
+.p-select-option-label,
+.p-dropdown-item,
+.p-multiselect-option {
+  color: inherit !important;
+}
+
+.p-dropdown-empty-message,
+.p-select-empty-message,
+.p-multiselect-empty-message {
+  color: var(--muted) !important;
+}
+
+.p-drawer,
+.p-dialog,
+.p-datepicker-panel,
+.p-dropdown-panel,
+.p-select-overlay {
+  background: #161a21 !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.p-fileupload-basic {
+  width: 100%;
+}
+
+.p-breadcrumb {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+  }
+}
