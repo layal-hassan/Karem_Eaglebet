@@ -1,0 +1,48 @@
+﻿===== PAGE 1 =====
+Agent API Agent API Documentation ,Authentication ,Permissions Agent Player Endpoints Last :ugxiated 2026-01-22 This dcxNment the Agent API end\x(ints and required client behavior for authentication and token .refresh AII request/response examples are taken from the provided endßX(int .files Only one accessToken refreshToken+ pair is valid per .gent. f/ an agent performs a duplicate signln via the ,API the previous tokens become invalid access) and .(sh. Access token :TTL 1 .hour Refresh token :TTL 7 .YS. Refresh• token :rotation after a successful refreshToken ,call the old refresh token becomes invalid and a new token pair is Page1
+
+===== PAGE 2 =====
+Agent API Contents OAuthentication ,signln) ,refreshToken invalid aCCeSS token (handling permissions• and authorization HTTP) (403 common• envelope and HTTP status cxxies Agent :endpoints ,getAgentAllWallets ,depositToAgent ,withdrawFromAgent getChildren OPlayer :en#ints ,registerPlayer ,getPlayersForCurrentAgent ,depositToPlayer ,withdrawFromPlayer getPlayerBalanceByld Page 2
+
+===== PAGE 3 =====
+Agent API Authentication AII protected en#ints require the Authorization :header Bearer .accessToken>» lnvalid aCCeSS token response result) ج (ex" f/ any protected endpoint returns the following ,response the current token is invalid or :expired notification" Client :flow If yOu have a refresh ,token call refreshToken tO obtain a new token .pair If the refresh token is missing or ,invalid call .signln POST global/api/UserApi/signln EndßX(int Headers Request example Value gl0bal/api/UserApi/signln Content-T}.TE application/json "rightPassword" Success example HTTP) (200 accessToken" :"refreshToken" •"notification" .eyJOeXAiOiJKV1QiLC" ,"pDdyQxfKUY.. "93db5Oe2debb. Page 3
+
+===== PAGE 4 =====
+Agent API Error response example HTTP) (401 :"refreshToken" .421a1b6b1ac6bbb1" ي :••status" :••result" ,false notification":]" - ,code••:l :••content" lnvalid" ugername or ••.password :"title" ,"signln•• autoHideAfter" :"list" •status" "error" POST global/api/UserApi/refreshToken Methcxi Endgx(int Headers Request example Value gl0bal/api/UserApi/refreshT0ken application/json Success example HTTP) (200 •"result" :"refreshToken" .cbfce88Sb2dca6e2" :notification" "9d1Ofa241263.. 6. "ab246394f67e.. Page 4
+
+===== PAGE 5 =====
+Agent API Error response example HTTP) (401 :••status" ,true ، :••result" :"notification" - ,code••:l :••content" lnvalid" or expired refresh tokenn :"title" :"autoHideAfter" :"list" •status" "error" Permissions and authorization Agent is by partner configuration by Partner .(Admin f/ an agent does not have permission for a ,function the API :returns HTTP 403 with message You" Don•t have for this ".ion. Permission functions The following function names are by the :system Agent endpoints getAgentAIIWaIIets depositT0Agent withdrawFromAgent getChildren Player endpoints registerPIayer getPIayersForCurrentAgent depositT0Player withdrawFromPlayer getPIayerBaIanceById Page 5
+
+===== PAGE 6 =====
+Agent API Common response format and HTTP status codes Most return a consistent :envelope ,status ,html ,result and .notification Common HTTP status codes used in this :API OK - sucæssfully :note) some application-level errors may still return 200 with result set tO .(alse. 401 Unauthorized - invalid credentials or invalid/expired refresh .ken. 403 Forbidden - agent lacks for the requested .nction. O422Unprocessable Entity - validation Or business rule errOr :examples) Wrong ,arguments Not .(urrency. Page6
+
+===== PAGE 7 =====
+Agent API Agent endpoints POST global/api/UserApi/getAgentAllWallets Property En#int Headers Request body example Value gl0bal/api/UserApi/getAgentAllWallets :Authorization <a)xessT0ken> Success response example HTTP) (200 Statug" •result" currencyName" •"currencyCode" n! ted Arab Emirates ,"Dirham 95763" ,"82، .creditZine" ٠ ,"1219249.2" :"credit" availability" "balance" "bonus" ,"frozenBa1anceø:"O" :"withAmount" ,"currencyName":"Lek" •currencyCode" :"avai1ab1eWa11et" ,"95763.82" creditLine" "credit. availability" •balance" ,"103824.15-" E„onus" frozenBa1ance" notification" POST global/api/UserApi/depositToAgent Methcxi Er-#int Value Page 7
+
+===== PAGE 8 =====
+Agent API Headers Request example :ization. Bearer <acwssToken> amount" : float . // not required string :"comment•• Your" ••omment. :"affiliateld" :••moneyStatus•• "currencyCode" ,"2627036" ,3 // 2٠ credit "AMD" // string >rea1-3, // Enum response example HTTP) (200 balance" creditLine" ,"1352923.00" credit" availability" currencyCode" ):"notification" ,code":l" ,5OOO:"autoHideAfter" Error example HTTP) (422 notification":]" ,code":l" :"title" ,"transaction Page8
+
+===== PAGE 9 =====
+Agent API Error response example HTTP) (422 :"status" :"resultø ,false :"notification" ,code":l" :"content" Wrong" "arguments :"title" ,5OOO:"autoHideAfter" :"list" •status" "error" POST global/api/UserApi/withdrawFromAgent En#int Headers Request body example Value POST gl0bal/api/UserApi/withdrawFromAgent :Authorization <a)xessT0ken> "YOurCOmment" ,"2627036" 3: / -2 credit :"affiliateld" currencyCcde" Success response example HTTP) (200 :"result" •creditLine" ,"1352923.00" availability" Page9
+
+===== PAGE 10 =====
+Agent API Error response example HTTP) (422 :"status" :"resultø ,false :"notification" ,code":l" :"content" Wrong" "arguments :"title" ,5OOO:"autoHideAfter" :"list" •status" "error" POST gIobaI/api/UserApi/getChiIdren Property Method Endpoint Headers POST global/api/UserApi/getChildren :Authorization Bearer <accessToken> Request body example :•filter• •action• :"va1ueLabet• ialse •status• •action• ,"2S9å189% :"va1ueLabet• "2594189" Success example HTP) (200 status•:true• result• ,"2594189" te;tin• ,"com.damai1)1551 "S6465ü :"kota1Recordscount• I" :•totat• nult :•r;otification• Page1O
+
+===== PAGE 11 =====
+Agent API Player endpoints POST global/api/UserApi/registerPlayer "status") t: ,rue "html" •result":l,"notificationn","": En#int Headers Request body example :player" Value gl0bal/api/UserApi/registerPlayer :Authorization <acx:essT0ken> :"email" ,"com.username511551@gmai1" :"pasgword" ,"++Y43d4RY43d4R" :"parentld" ,"2616430" " . "username511551" Success response example HTTP) (200 Error response example HTTP) (422 ):"notification" . N0t" Supported Currency POST gIobaI/api/UserApi/getPIayersForCurrentAgent Headers Request examples Value global/api/UserApi/getPlayersForCurrentAgent :Authorization Bearer <acæssToken> Page 11
+
+===== PAGE 12 =====
+Agent API Example A • by playerld ,start••:O•• :••filter•• :"withoutTota1Count" ":"action" :"value•• true :••playerldø :"action" " ,"96525333" •value" •"va1ueLabe1•• . "96525333" action:"like" :"igNextPage" false Example B - by userName (like) Start" filter" :"withoutTota1Count" •action" value" Page 12
+
+===== PAGE 13 =====
+Agent API Success response example HTTP) (200 status" :"result" records":t" affiliateld":"ngaaa" player" :"ld ."357952521" :"registerDateø 2025.12-09" "16:44:34 :"ælastna" ,null cur" renCy phoneNunber• nu11 7":"affiIiateTd" user" :"name ,"dfvuj"rewgytg.rth" "registerDate" 09-12•25€2": "Ig:I7:42 :"firstname" ,null cur" :"rency :"phoneNumber" nuII :"affiliateld" 728333" player" :"ld ,"9/1471/%3" user" :"æna ghrfcqyjfg@fdf" ,"tqfh. :"registerDate" "aa:ag:O917-2G?5-12" ,firstnaæ":null" last" :"name ,null cur" rency :"phoneNumber" nuII 7":"affiIiateId" player" :"ld "357977121" 2625-12-09" ,"18:02:16 :"registerDate" ,lastna—":null" cur" renCy phoneNumt(er":nuII" totaIRecordsCount• notification•:][" POST global/api/UserApi/depositToPlayer Method Enc#nint Headers Value :Authorization Bearer <acæssT0ken> Page 13
+
+===== PAGE 14 =====
+Agent API Request example ,amount••:l•• :"playerld•• ,"15113649" ,"currencyCode":"AED" currency•• :"moneyStatus•• 5 Success response example HTTP) (200 ,49OO.OO:"ba1ance" credit" "currencyCode":"AED" :"notification" Error example HTTP) (422 :"result" ):"notification" ,code":l" :"title" NOt" Supported Currency ,5OOO:"autoHideAfter" POST global/api/UserApi/withdrawFromPlayer Headers Value gl0bab'api/UserApi/withdrawFromPlayer :Authorization Bearer <acæssToken> Page 14
+
+===== PAGE 15 =====
+Agent API Request example :••a_mount•• ,11• :"playerld•• ,"75105819" ,"currencyCode":"EUR" currency•• :"moneyStatus•• 5 Success response example HTTP) (200 ,49OO.OO:"ba1ance" credit" "currencyCode":"AED" :"notification" Error example HTTP) (422 :"result" ):"notification" ,code":l" : Withdrawa1" is ,"restricted :"title" ,5OOO:"autoHideAfter" POST global/api/UserApi/getPlayerBalanceByld Headers Request example :"playerld" Value gl0bab'api/UserApi/getPlayerBalanæByld :Authorization Bearer <acæssToken> "15107888" Page 15
+
+===== PAGE 16 =====
+Agent API Success response example HTTP) (200 :"status" :"resultø ,ba1ance":O" •••currencyC0de" •"main" true :"notificationø f/ player not found HTTP) (200 notification" Page 16
+
