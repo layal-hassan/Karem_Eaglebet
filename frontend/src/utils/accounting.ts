@@ -29,7 +29,7 @@ const confirmedTransactions = (transactions: TransactionRecord[]) =>
 export const calculateAgentMetrics = (agent: AgentRecord, transactions: TransactionRecord[]): AgentMetrics => {
   const related = confirmedTransactions(transactions).filter((transaction) => transaction.agentId === agent.id)
 
-  return related.reduce<AgentMetrics>(
+  const metrics = related.reduce<AgentMetrics>(
     (metrics, transaction) => {
       if (transaction.type === 'شراء') {
         metrics.totalPurchased += transaction.receivedBalance ?? 0
@@ -62,6 +62,12 @@ export const calculateAgentMetrics = (agent: AgentRecord, transactions: Transact
       lastPayment: 0,
     },
   )
+
+  if (agent.currentBalance != null) {
+    metrics.currentBalance = agent.currentBalance
+  }
+
+  return metrics
 }
 
 export const buildAgentSummaries = (agents: AgentRecord[], transactions: TransactionRecord[]): AgentSummary[] =>

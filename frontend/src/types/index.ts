@@ -45,6 +45,7 @@ export interface AgentRecord {
   createdAt: string
   updatedAt: string
   typeLabel: 'وكيل رئيسي' | 'وكيل فرعي' | 'وكيل ذهبي'
+  currentBalance?: number
 }
 
 export interface TransactionRecord {

@@ -3,11 +3,12 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Agent, Transaction
+from .serializers import AgentSerializer, TransactionSerializer
 
 
 def envelope(result, ok=True):
@@ -18,19 +19,20 @@ class SignInView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        user = authenticate(
-            request,
-            username=request.data.get('username', ''),
-            password=request.data.get('password', ''),
-        )
+        user = authenticate(request, username=request.data.get('username', ''), password=request.data.get('password', ''))
         if user is None or not user.is_active:
             return Response(
                 envelope(None, False) | {
-                    'notification': [{'code': 1, 'title': 'تعذر تسجيل الدخول', 'content': 'اسم المستخدم أو كلمة المرور غير صحيحة', 'autoHideAfter': 4000, 'status': 'error'}]
+                    'notification': [{
+                        'code': 1,
+                        'title': 'تعذر تسجيل الدخول',
+                        'content': 'اسم المستخدم أو كلمة المرور غير صحيحة',
+                        'autoHideAfter': 4000,
+                        'status': 'error',
+                    }]
                 },
                 status=status.HTTP_401_UNAUTHORIZED,
             )
-
         refresh = RefreshToken.for_user(user)
         return Response(envelope({'accessToken': str(refresh.access_token), 'refreshToken': str(refresh)}))
 
@@ -45,7 +47,13 @@ class RefreshView(APIView):
         except TokenError:
             return Response(
                 envelope(None, False) | {
-                    'notification': [{'code': 1, 'title': 'انتهت الجلسة', 'content': 'يرجى تسجيل الدخول مجددًا', 'autoHideAfter': 4000, 'status': 'error'}]
+                    'notification': [{
+                        'code': 1,
+                        'title': 'انتهت الجلسة',
+                        'content': 'يرجى تسجيل الدخول مجددًا',
+                        'autoHideAfter': 4000,
+                        'status': 'error',
+                    }]
                 },
                 status=status.HTTP_401_UNAUTHORIZED,
             )
@@ -57,11 +65,8 @@ class RefreshView(APIView):
 
 class LogoutView(APIView):
     def post(self, request):
-        refresh_token = request.data.get('refreshToken')
-        if not refresh_token:
-            return Response(envelope(None, False), status=status.HTTP_400_BAD_REQUEST)
         try:
-            RefreshToken(refresh_token).blacklist()
+            RefreshToken(request.data.get('refreshToken')).blacklist()
         except Exception:
             return Response(envelope(None, False), status=status.HTTP_400_BAD_REQUEST)
         return Response(envelope(True))
@@ -80,59 +85,79 @@ class CurrentUserView(APIView):
 
 class RecordCollectionView(APIView):
     model = None
+    serializer_class = None
 
     def get(self, request):
-        records = self.model.objects.filter(owner=request.user).values_list('payload', flat=True)
-        return Response(envelope(list(records)))
+        records = self.model.objects.filter(owner=request.user).select_related(*self.select_related())
+        return Response(envelope(self.serializer_class(records, many=True, context={'request': request}).data))
 
     def post(self, request):
-        payload = request.data
-        record_id = payload.get('id')
-        if not isinstance(payload, dict) or not record_id:
-            return Response(envelope(None, False), status=status.HTTP_400_BAD_REQUEST)
-        record, _ = self.model.objects.update_or_create(
-            owner=request.user,
-            record_id=str(record_id),
-            defaults={'payload': payload},
-        )
-        return Response(envelope(record.payload), status=status.HTTP_201_CREATED)
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        if not serializer.is_valid():
+            return Response(envelope(serializer.errors, False), status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(envelope(serializer.data), status=status.HTTP_201_CREATED)
+
+    def select_related(self):
+        return ()
 
 
 class RecordDetailView(APIView):
     model = None
+    serializer_class = None
 
     def get_object(self, request, record_id):
-        return self.model.objects.filter(owner=request.user, record_id=record_id).first()
+        return self.model.objects.filter(owner=request.user, record_id=record_id).select_related(*self.select_related()).first()
 
     def get(self, request, record_id):
         record = self.get_object(request, record_id)
         if record is None:
             return Response(envelope(None, False), status=status.HTTP_404_NOT_FOUND)
-        return Response(envelope(record.payload))
+        return Response(envelope(self.serializer_class(record, context={'request': request}).data))
 
     def put(self, request, record_id):
-        payload = request.data
-        if not isinstance(payload, dict) or str(payload.get('id')) != record_id:
-            return Response(envelope(None, False), status=status.HTTP_400_BAD_REQUEST)
-        record, _ = self.model.objects.update_or_create(
-            owner=request.user,
-            record_id=record_id,
-            defaults={'payload': payload},
-        )
-        return Response(envelope(record.payload))
+        record = self.get_object(request, record_id)
+        if record is None:
+            return Response(envelope(None, False), status=status.HTTP_404_NOT_FOUND)
+        if str(request.data.get('id')) != record_id:
+            return Response(envelope({'id': ['The URL and payload ids must match.']}, False), status=status.HTTP_400_BAD_REQUEST)
+        serializer = self.serializer_class(record, data=request.data, context={'request': request})
+        if not serializer.is_valid():
+            return Response(envelope(serializer.errors, False), status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
+        return Response(envelope(serializer.data))
+
+    def select_related(self):
+        return ()
 
 
 class AgentCollectionView(RecordCollectionView):
     model = Agent
+    serializer_class = AgentSerializer
 
 
 class AgentDetailView(RecordDetailView):
     model = Agent
+    serializer_class = AgentSerializer
 
 
 class TransactionCollectionView(RecordCollectionView):
     model = Transaction
+    serializer_class = TransactionSerializer
+
+    def select_related(self):
+        return ('agent',)
 
 
 class TransactionDetailView(RecordDetailView):
     model = Transaction
+    serializer_class = TransactionSerializer
+
+    def select_related(self):
+        return ('agent',)
+
+    def put(self, request, record_id):
+        return Response(
+            envelope({'detail': 'Financial transactions are immutable; create a correcting transaction.'}, False),
+            status=status.HTTP_405_METHOD_NOT_ALLOWED,
+        )
